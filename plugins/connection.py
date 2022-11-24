@@ -22,7 +22,7 @@ async def addconnection(client, message):
             await message.reply_text(
                 "<b>Enter in correct format!</b>\n\n"
                 "<code>/connect groupid</code>\n\n"
-                "<i>Group id lene liye, mujhe us group mei add kr ke ye command dein 👉 <code>/id</code></i>",
+                "<i>To get group id , you can add me to that group and send this code<code>/id</code></i>",
                 quote=True
             )
             return
@@ -37,12 +37,12 @@ async def addconnection(client, message):
                 and st.status != "creator"
                 and userid not in ADMINS
         ):
-            await message.reply_text("Pehle aapko is group mei Admin banna prega.", quote=True)
+            await message.reply_text("You have to be An Admin for this... ", quote=True)
             return
     except Exception as e:
         logger.exception(e)
         await message.reply_text(
-            "Group ID galat hai!\n\nAgar sahi hai, toh ek dfa check kijiye ki main is group main hu ya nhi!!",
+            "Invalid Group ID !\n\nIf it is valid id then please check if i am in group or not ! ",
             quote=True,
         )
 
@@ -56,7 +56,7 @@ async def addconnection(client, message):
             addcon = await add_connection(str(group_id), str(userid))
             if addcon:
                 await message.reply_text(
-                    f"Badhai ho! main **{title}** se connect ho gyi hu...\n Ab aap mujhe kopche mei milo!",
+                    f"Successfully connected to **{title}** \nText me in private.",
                     quote=True,
                     parse_mode="md"
                 )
@@ -68,14 +68,14 @@ async def addconnection(client, message):
                     )
             else:
                 await message.reply_text(
-                    "Arey jaanemann ! Main is chat se already judi hui hu... 🤦‍♀️ !",
+                    "I am alreaddy in this chat🤦‍♀️ !",
                     quote=True
                 )
         else:
-            await message.reply_text("Group mei mujhe Admin bnaao", quote=True)
+            await message.reply_text("Make me Admin in group", quote=True)
     except Exception as e:
         logger.exception(e)
-        await message.reply_text('kya grbr krr daala re, ek dfa fir se try kro 🤦‍♀️!', quote=True)
+        await message.reply_text('something went wrong. try again !', quote=True)
         return
 
 
@@ -83,11 +83,11 @@ async def addconnection(client, message):
 async def deleteconnection(client, message):
     userid = message.from_user.id if message.from_user else None
     if not userid:
-        return await message.reply(f"Oye Anzaan Admin ji, kripaa kr ye command ko mujhe kopche m bhejo 👉 Use /connect {message.chat.id} in PM")
+        return await message.reply(f"Hey anonymous send this cmd in private 👉 Use /connect {message.chat.id} in PM")
     chat_type = message.chat.type
 
     if chat_type == "private":
-        await message.reply_text("Connected groups ko dekhne ke liye ya group ko disconnect krne ke liye /connections type kro !", quote=True)
+        await message.reply_text(" To see connected groups or to disconnect me from any group or chat please type /connections", quote=True)
 
     elif chat_type in ["group", "supergroup"]:
         group_id = message.chat.id
@@ -102,9 +102,9 @@ async def deleteconnection(client, message):
 
         delcon = await delete_connection(str(userid), str(group_id))
         if delcon:
-            await message.reply_text("Chal Sona, Chat disconnect ho gya , ab aage kya krna hai ?", quote=True)
+            await message.reply_text("Chat disconnected successfully ! what next ?", quote=True)
         else:
-            await message.reply_text("Sona ! is chat se toh main connected hu hi nhi!\nAgar connect krna h toh mujhe /connect command do !", quote=True)
+            await message.reply_text("I am not connected to this chat. \nif you want to connect me to this chat then please send /connect to me.", quote=True)
 
 
 @Client.on_message(filters.private & filters.command(["connections"]))
@@ -114,7 +114,7 @@ async def connections(client, message):
     groupids = await all_connections(str(userid))
     if groupids is None:
         await message.reply_text(
-            "Sona ! Main ab tk kisi v chat se connected nhi hu!! Pehle kisi group se connect kro mujhe !",
+            "I am not in any chat ! please connect first...",
             quote=True
         )
         return
@@ -142,6 +142,6 @@ async def connections(client, message):
         )
     else:
         await message.reply_text(
-            "Sona ! Main ab tk kisi v group se connected nhi hu!! Pehle kisi group se connect kro mujhe !",
+            "I am not in any chat ! please connect first...",
             quote=True
         )

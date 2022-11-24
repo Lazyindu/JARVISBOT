@@ -23,7 +23,7 @@ async def start(client, message):
     if message.chat.type in ['group', 'supergroup']:
         buttons = [
             [
-                InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/LazyDeveloper')
+                InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/Jollygymkhanaupdates')
             ],
             [
                 InlineKeyboardButton('🙆🏻 Help 🦾', url=f"https://t.me/{temp.U_NAME}?start=help"),
@@ -45,7 +45,7 @@ async def start(client, message):
             InlineKeyboardButton('➕↖️ Add Me To Your Groups ↗️➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
             ],[
             InlineKeyboardButton('🧞‍♀️ Search 🧐', switch_inline_query_current_chat=''),
-            InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/LazyDeveloper')
+            InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/Jollygymkhanaupdates')
             ],[
             InlineKeyboardButton('🙆🏻 Help 🦾', callback_data='help'),
             InlineKeyboardButton('♥️ About ♥️', callback_data='about')
@@ -62,12 +62,12 @@ async def start(client, message):
         try:
             invite_link = await client.create_chat_invite_link(int(AUTH_CHANNEL))
         except ChatAdminRequired:
-            logger.error("Hey Sona, Ek dfa check kr lo ki main Channel mei Add hu ya nhi...!")
+            logger.error("Hey Dear, please make sure that i am present in your group !")
             return
         btn = [
             [
                 InlineKeyboardButton(
-                    "🤖 Sona, Please Join Updates Channel ", url=invite_link.invite_link
+                    "🤖Please Join My Updates Channel ", url=invite_link.invite_link
                 )
             ]
         ]
@@ -91,7 +91,7 @@ async def start(client, message):
             InlineKeyboardButton('➕↖️ Add Me To Your Groups ↗️➕', url=f'http://t.me/{temp.U_NAME}?startgroup=true')
             ],[
             InlineKeyboardButton('🧞‍♀️ Search 🧐', switch_inline_query_current_chat=''),
-            InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/LazyDeveloper')
+            InlineKeyboardButton('🔔 Updates 🤖', url='https://t.me/Jollygymkhanaupdates')
             ],[
             InlineKeyboardButton('🙆🏻 Help 🦾', callback_data='help'),
             InlineKeyboardButton('♥️ About ♥️', callback_data='about')
@@ -257,7 +257,7 @@ async def channel_info(bot, message):
     elif isinstance(CHANNELS, list):
         channels = CHANNELS
     else:
-        raise ValueError("Bhkk!! Unexpected type of CHANNELS")
+        raise ValueError("Unexpected type of CHANNELS")
 
     text = '📑 **Indexed channels/groups**\n'
     for channel in channels:
@@ -294,7 +294,7 @@ async def delete(bot, message):
     if reply and reply.media:
         msg = await message.reply("Processing...⏳", quote=True)
     else:
-        await message.reply('Sona Jo File delete krna chahte ho us pr /delete ka reply kro !!', quote=True)
+        await message.reply('Please reply /delete to the file which you want to delete !', quote=True)
         return
 
     for file_type in ("document", "video", "audio"):
@@ -302,7 +302,7 @@ async def delete(bot, message):
         if media is not None:
             break
     else:
-        await msg.edit('Na! ye Format nhi chlega ! kuchh aor try kro 🤥')
+        await msg.edit('Invalid format \n I dont understand this type of format')
         return
     
     file_id, file_ref = unpack_new_file_id(media.file_id)
@@ -311,7 +311,7 @@ async def delete(bot, message):
         '_id': file_id,
     })
     if result.deleted_count:
-        await msg.edit('Chal Sona Database se ye file delete ho gya! Ab aage bolo 🤪')
+        await msg.edit('I have removed this file from your DataBase. \nTell me what to do next...?')
     else:
         file_name = re.sub(r"(_|\-|\.|\+)", " ", str(media.file_name))
         result = await Media.collection.delete_many({
@@ -320,7 +320,7 @@ async def delete(bot, message):
             'mime_type': media.mime_type
             })
         if result.deleted_count:
-            await msg.edit('Chal Sona Database ka saara files delete ho gya! Ab aage bolo 🤪')
+            await msg.edit('All files removed successfully ✅.\n How can i help you again...?')
         else:
             # files indexed before https://github.com/EvamariaTG/EvaMaria/commit/f3d2a1bcb155faf44178e5d7a685a1b533e714bf#diff-86b613edf1748372103e94cacff3b578b36b698ef9c16817bb98fe9ef22fb669R39 
             # have original file name.
@@ -330,15 +330,15 @@ async def delete(bot, message):
                 'mime_type': media.mime_type
             })
             if result.deleted_count:
-                await msg.edit('Chal Sona Database se ye file delete ho gya! Ab aage bolo 🤪')
+                await msg.edit('I have removed this file from your DataBase. \nTell me what to do next...?')
             else:
-                await msg.edit('File not found in database // File toh Database mei hai hi nhi 🤷‍♀️ !')
+                await msg.edit('File not found in database 🤷‍♀️ !')
 
 
 @Client.on_message(filters.command('deleteall') & filters.user(ADMINS))
 async def delete_all_index(bot, message):
     await message.reply_text(
-        'Ek dfa fir se soch lo Sona, \n Qnki Index kiya hua saara files delete ho jayega, fir baad mei mujh pr ilzaam mtt lgaana 😒 \n Delete krr du kya ?',
+        '❗️ **Alert** ! Think again before proceeding this process... !\n⚠️ **Everything will be deleted permanently** !',
         reply_markup=InlineKeyboardMarkup(
             [
                 [
@@ -360,15 +360,15 @@ async def delete_all_index(bot, message):
 @Client.on_callback_query(filters.regex(r'^autofilter_delete'))
 async def delete_all_index_confirm(bot, message):
     await Media.collection.drop()
-    await message.answer('🙈 I love you dear Developer indu ♥️')
-    await message.message.edit('Chal Sona, Index kiya hua saara file delete ho gya! Ab aage bolo 🤪 ')
+    await message.answer('❤️Thank You @LazyDeveloper ❤️')
+    await message.message.edit('All files have deleted successfully 🤪 ')
   
 
 @Client.on_message(filters.command('settings'))
 async def settings(client, message):
     userid = message.from_user.id if message.from_user else None
     if not userid:
-        return await message.reply(f"Oye Anzaan Admin ji, kripaa kr ye command ko mujhe kopche m bhejo 👉 Use /connect {message.chat.id} in PM")
+        return await message.reply(f"Hey anonymous send this cmd in private 👉 Use /connect {message.chat.id} in PM")
     chat_type = message.chat.type
 
     if chat_type == "private":
@@ -379,10 +379,10 @@ async def settings(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Arey Sona ek dfa fir se dekh lo ki main tumhaare kisi group hun bhi ya nhi... 😂", quote=True)
+                await message.reply_text("Please check, i am present in your group or not 😂", quote=True)
                 return
         else:
-            await message.reply_text("Arey! Arey! pehle mujhe kisi group mei ADD toh krr lo ji... 🤭", quote=True)
+            await message.reply_text("Ooh God ! please add me in any group first 🤭", quote=True)
             return
 
     elif chat_type in ["group", "supergroup"]:
@@ -469,7 +469,7 @@ async def settings(client, message):
         reply_markup = InlineKeyboardMarkup(buttons)
 
         await message.reply_text(
-            text=f"<b>{title} ka apne hisaab se jo - jo setting change krna chahte ho krr lo 🧰 !</b>",
+            text=f"<b>{title} 🧰 Change settings according to you !</b>",
             reply_markup=reply_markup,
             disable_web_page_preview=True,
             parse_mode="html",
@@ -483,7 +483,7 @@ async def save_template(client, message):
     sts = await message.reply("Checking template")
     userid = message.from_user.id if message.from_user else None
     if not userid:
-        return await message.reply(f"Oye Anzaan Admin ji, kripaa kr ye command ko mujhe kopche m bhejo 👉 Use /connect {message.chat.id} in PM")
+        return await message.reply(f"Hey anonymous send this cmd in private 👉 Use /connect {message.chat.id} in PM")
     chat_type = message.chat.type
 
     if chat_type == "private":
@@ -494,10 +494,10 @@ async def save_template(client, message):
                 chat = await client.get_chat(grpid)
                 title = chat.title
             except:
-                await message.reply_text("Arey Sona ek dfa fir se dekh lo ki main tumhaare kisi group hun bhi ya nhi... 😂", quote=True)
+                await message.reply_text("Please check, i am present in your group or not 😂", quote=True)
                 return
         else:
-            await message.reply_text("Arey! Arey! pehle mujhe kisi group mei ADD toh krr lo... 🤭", quote=True)
+            await message.reply_text("Ooh God ! please add me in any group first 🤭", quote=True)
             return
 
     elif chat_type in ["group", "supergroup"]:
@@ -519,4 +519,4 @@ async def save_template(client, message):
         return await sts.edit("No Input!!")
     template = message.text.split(" ", 1)[1]
     await save_group_settings(grp_id, 'template', template)
-    await sts.edit(f"Chal bidu kaam ho gya... 👉 {title} ka template ye kr diye 👉\n\n{template}")
+    await sts.edit(f"Ok Done 👉 {title} changed to this 👉\n\n{template}")

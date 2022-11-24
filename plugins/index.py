@@ -23,18 +23,18 @@ async def index_files(bot, query):
     if raju == 'reject':
         await query.message.delete()
         await bot.send_message(int(from_user),
-                               f'Sona! Your Submission for indexing {chat} ko hamaare moderators ke duaara declined krr diya gya.',
+                               f'Your Submission for indexing {chat} has been rejected !',
                                reply_to_message_id=int(lst_msg_id))
         return
 
     if lock.locked():
-        return await query.answer('Ruko zraa! sabr kro, pehle wala kaam ko poora toh hone do', show_alert=True)
+        return await query.answer('Please wait...', show_alert=True)
     msg = query.message
 
     await query.answer('Wait please ! Adding files to Database...', show_alert=True)
     if int(from_user) not in ADMINS:
         await bot.send_message(int(from_user),
-                               f' Congrats Sona! Your Submission for indexing {chat} ko hamaare moderators ne accept krr liya hai aor jald hi index add krr diya jayega .',
+                               f' Congrats.. Your Submission for indexing {chat} has been approved.',
                                reply_to_message_id=int(lst_msg_id))
     await msg.edit(
         "Starting Indexing",
@@ -68,7 +68,7 @@ async def send_for_index(bot, message):
     try:
         await bot.get_chat(chat_id)
     except ChannelInvalid:
-        return await message.reply('Sona! Ye ek private channel / group hai. \nFiles ko Index krne ke liye mujhe usme ADMIN bnaao.')
+        return await message.reply('This is a private channel or group ! please make me Admin to index files.')
     except (UsernameInvalid, UsernameNotModified):
         return await message.reply('Invalid Link specified.')
     except Exception as e:
@@ -77,9 +77,9 @@ async def send_for_index(bot, message):
     try:
         k = await bot.get_messages(chat_id, last_msg_id)
     except:
-        return await message.reply('Babu Agar Channel private hai toh please ek dfa check krr lo ki main ADMIN hu ya nhi 🙆🏻‍♀️ !! ')
+        return await message.reply(' Please check that i am ADMIN in the channel.If it is private 🙆🏻‍♀️ !! ')
     if k.empty:
-        return await message.reply('This may be group and iam not a admin of the group sona.')
+        return await message.reply('This may be group and i am not a admin of the group.')
 
     if message.from_user.id in ADMINS:
         buttons = [
@@ -93,14 +93,14 @@ async def send_for_index(bot, message):
         ]
         reply_markup = InlineKeyboardMarkup(buttons)
         return await message.reply(
-            f'Sona! kya aap is Channel/ Group ko index krna chahte ho ?\n\nChat ID/ Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>',
+            f'Do you want to index this channel\n\nChat ID/ Username: <code>{chat_id}</code>\nLast Message ID: <code>{last_msg_id}</code>',
             reply_markup=reply_markup)
 
     if type(chat_id) is int:
         try:
             link = (await bot.create_chat_invite_link(chat_id)).invite_link
         except ChatAdminRequired:
-            return await message.reply('Please make sure ki main aapke is chat main ADMIN hu aor mujhe users ko invite krne ka permission bhi diya hua h 🤷‍♀️!!')
+            return await message.reply('Please make sure i am ADMIN in this chat and i have allowed to invite users 🤷‍♀️!!')
     else:
         link = f"@{message.forward_from_chat.username}"
     buttons = [
@@ -117,7 +117,7 @@ async def send_for_index(bot, message):
     await bot.send_message(LOG_CHANNEL,
                            f'#IndexRequest\n\nBy : {message.from_user.mention} (<code>{message.from_user.id}</code>)\nChat ID/ Username - <code> {chat_id}</code>\nLast Message ID - <code>{last_msg_id}</code>\nInviteLink - {link}',
                            reply_markup=reply_markup)
-    await message.reply('Thank You For the Contribution sona, Wait For My Moderators to verify the files.')
+    await message.reply('Thank You For the Contribution , Wait For My Moderators to verify the files.')
 
 
 @Client.on_message(filters.command('setskip') & filters.user(ADMINS))
