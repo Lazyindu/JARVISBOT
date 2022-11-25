@@ -53,7 +53,7 @@ You can deploy this bot anywhere.
 </a>
 </p>
 </details>
-
+https://app.koyeb.com/deploy?type=git&repository=github.com/Lazyindu/JARVISBOT&branch=main&name=lazyprincesx
 <details><summary>Deploy To VPS</summary>
 <p>
 <pre>
